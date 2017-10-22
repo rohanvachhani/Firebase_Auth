@@ -18,21 +18,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginAcitivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button buttonRegister;
+    private Button buttonSignIn;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private TextView textViewSignIn;
-
-    private ProgressDialog progressDialog;
+    private TextView textViewSignUp;
     private FirebaseAuth firebaseAuth;
+    private ProgressDialog progressDialog;
     private int E = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login_acitivity);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -42,18 +42,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(getApplicationContext(), ActivityProfile.class));
         }
 
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
         editTextEmail = (EditText) findViewById(R.id.enterEmail);
         editTextPassword = (EditText) findViewById(R.id.enterPass);
-        textViewSignIn = (TextView) findViewById(R.id.textViewSignIn);
-        progressDialog = new ProgressDialog(this);
+        buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
+        textViewSignUp = (TextView) findViewById(R.id.textViewSignIn);
 
-        buttonRegister.setOnClickListener(this);
-        textViewSignIn.setOnClickListener(this);
+        buttonSignIn.setOnClickListener(this);
+        textViewSignUp.setOnClickListener(this);
+
+        ProgressDialog progressDialog = new ProgressDialog(this);
     }
 
-    private void registerUser() {
-
+    private void userLogin() {
         String Email = editTextEmail.getText().toString().trim();
         String Password = editTextPassword.getText().toString().trim();
 
@@ -76,18 +76,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     progressDialog.dismiss();
-                    Toast.makeText(MainActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-
-                    //after successful registration, redirect user to profile activity
-                    //profile activity here
+                    //start profile activity
                     finish();       //before starting any new activity, finish the current activity
                     startActivity(new Intent(getApplicationContext(), ActivityProfile.class));
-
                 } else {
                     progressDialog.dismiss();
-                    Toast.makeText(MainActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                     if (E == 0) {
-                        Toast.makeText(MainActivity.this, "Incorrect format of Email", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginAcitivity.this, "Incorrect format of Email", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -96,12 +91,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view == buttonRegister) {
-            registerUser();
+        if (view == buttonSignIn) {
+            userLogin();
         }
-        if (view == textViewSignIn) {
-            //open the login activity
-            startActivity(new Intent(this, LoginAcitivity.class));
+        if (view == textViewSignUp) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 }
+
